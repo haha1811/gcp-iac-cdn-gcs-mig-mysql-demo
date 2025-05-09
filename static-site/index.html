@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Welcome to GCP</title>
+</head>
+<body>
+  <h1>Welcome to GCP CDN + GCS!</h1>
+  <p><button onclick="fetchAPI()">Call API</button></p>
+  <div id="response"></div>
+
+  <script>
+    function fetchAPI() {
+      fetch('/api/hello.php')
+        .then(res => res.text())
+        .then(data => document.getElementById('response').innerText = data);
+    }
+  </script>
+</body>
+</html>
