@@ -1,0 +1,22 @@
+
+---
+
+### ✅ `.gitignore`
+
+```gitignore
+# Terraform state
+*.tfstate
+*.tfstate.backup
+.terraform/
+
+# Sensitive files
+terraform.tfvars
+*.pem
+*.key
+
+# OS / Editor / IDE
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
