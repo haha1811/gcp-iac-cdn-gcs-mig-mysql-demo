@@ -99,8 +99,48 @@ git commit -m "Add initial README and .gitignore"
 git push origin main
 ```
 
-接下來我可以繼續幫你建置 `main.tf` 和 `modules/` 資料夾內容，要現在開始嗎？
+### ✅ `git add .`
 
+這個指令的意思是：
+
+> 👉 把 **當前目錄下所有變更過的檔案** 加入到 staging area（暫存區），包含：
+
+* 新增的檔案
+* 修改過的檔案
+* 被刪除的檔案（需搭配 `git rm`）
+
+也就是說，它會把 **目前目錄下的所有變更** 一次加進去。
+
+---
+
+### ✅ `git add README.md .gitignore`
+
+這個指令的意思是：
+
+> 👉 只加入 `README.md` 和 `.gitignore` 這兩個指定檔案到 staging area，其他變更不會被加入。
+
+這樣的寫法比較保守，適合你只想提交特定檔案（例如只提交文件變更、不提交程式碼）。
+
+### 📊 比較整理表：
+
+| 指令                             | 作用範圍             | 使用時機           |
+| ------------------------------ | ---------------- | -------------- |
+| `git add .`                    | 加入目前資料夾 **所有變更** | 想一次加入全部變更時     |
+| `git add README.md .gitignore` | 只加入指定檔案          | 想控制版本，只提交部分內容時 |
+
+---
+
+### 🛡️ 補充建議
+
+* 若你不小心 `git add .` 把不想加的檔案也加進去了，可以用：
+
+  ```bash
+  git reset HEAD filename
+  ```
+
+  把它從 staging 區移除。
+
+---
 
 :::info
 接下來我會依照下列結構，
@@ -125,24 +165,24 @@ module "gcs" {
 }
 
 module "cloud_sql" {
-  source         = "./modules/cloud_sql"
-  project_id     = var.project_id
-  instance_name  = var.db_instance_name
-  db_name        = var.db_name
-  db_user        = var.db_user
-  db_password    = var.db_password
-  region         = var.region
-  root_password  = var.db_root_password
+  source        = "./modules/cloud_sql"
+  project_id    = var.project_id
+  instance_name = var.db_instance_name
+  db_name       = var.db_name
+  db_user       = var.db_user
+  db_password   = var.db_password
+  region        = var.region
+  root_password = var.root_password
 }
 
 module "mig" {
-  source            = "./modules/mig"
-  project_id        = var.project_id
-  region            = var.region
-  zone              = var.zone
-  instance_count    = var.instance_count
-  instance_template = "vm-template"
-  db_connection     = module.cloud_sql.connection_name
+  source         = "./modules/mig"
+  project_id     = var.project_id
+  region         = var.region
+  zone           = var.zone
+  instance_count = var.instance_count
+  instance_type  = "n1-standard-1"
+  db_connection  = module.cloud_sql.connection_name
 }
 
 module "load_balancer" {
@@ -165,6 +205,7 @@ output "load_balancer_ip" {
 output "sql_public_ip" {
   value = module.cloud_sql.public_ip
 }
+
 
 
 ##############################
